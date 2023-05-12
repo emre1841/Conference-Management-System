@@ -1,0 +1,34 @@
+﻿
+@model ConferenceManagementSystem.Models.Entities.Notification
+@{
+    ViewBag.Title = "Update";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-md-3"></div>
+    <div class="col-md-6 login-form-1">
+
+
+        <form action="/Notification/Update" method="post">
+            <div class="form-group">
+                <input type="text" class="form-control" name="Title" placeholder="Title *" value="@Model.Title" required />
+            </div>
+            <div class="form-group">
+                <input type="text" class="form-control" name="Explanation" placeholder="Explanation *" value="@Model.Explanation" required />
+            </div>
+            
+            <input type="hidden" name="Id" value="@Model.Id"/>
+
+
+
+            <div class="form-group">
+                <input type="submit" class="btn btn-primary" value="Save" />
+
+            </div>
+
+        </form>
+    </div>
+
+</div>
+

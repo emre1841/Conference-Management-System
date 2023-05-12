@@ -1,0 +1,93 @@
+﻿@model ConferenceManagementSystem.Models.ViewModels.NotificationViewModel
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/MaterialDesign-Webfont/5.3.45/css/materialdesignicons.css" integrity="sha256-NAxhqDvtY0l4xn+YVa6WjAcmd94NNfttjNsDmNatFVc=" crossorigin="anonymous" />
+<style>
+    body {
+        margin-top: 20px;
+        background-color: #f0f2f5;
+    }
+
+    .dropdown-list-image {
+        position: relative;
+        height: 2.5rem;
+        width: 2.5rem;
+    }
+
+        .dropdown-list-image img {
+            height: 2.5rem;
+            width: 2.5rem;
+        }
+
+    .btn-light {
+        color: #2cdd9b;
+        background-color: #e5f7f0;
+        border-color: #d8f7eb;
+    }
+</style>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-3 left">
+            <div class="box shadow-sm mb-3 rounded bg-white ads-box text-center">
+                <img src="~/Content/img/male.png" class="img-fluid" alt="Responsive image" />
+                <div class="p-3 border-bottom">
+                    <h6 class="font-weight-bold text-dark">Notifications</h6>
+                    <p class="mb-0 text-muted">Check for new notifications !!</p>
+                </div>
+                
+            </div>
+           
+        </div>
+        <div class="col-lg-9 right">
+            @if (Model.Notification != null)
+            {
+
+                <div class="box shadow-sm rounded bg-white mb-3">
+                    <div class="box-title border-bottom p-3">
+                        <h6 class="m-0">Recent</h6>
+                    </div>
+                    <div class="box-body p-0">
+                        <div class="p-3 d-flex align-items-center bg-light border-bottom osahan-post-header">
+                            <div class="dropdown-list-image mr-3">
+                                <img class="rounded-circle" src="~/Content/img/alertnote.png" alt="" />
+                            </div>
+                            <div class="font-weight-bold mr-3">
+                                <div class="text-truncate">@Model.Notification.Title</div>
+                                <div class="small">@Model.Notification.Explanation</div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            }
+
+            <div class="box shadow-sm rounded bg-white mb-3">
+                <div class="box-title border-bottom p-3">
+                    <h6 class="m-0">Earlier</h6>
+                </div>
+                <div class="box-body p-0">
+                    @foreach (var item in Model.Notifications)
+                    {
+                        <div class="p-3 d-flex align-items-center border-bottom osahan-post-header">
+                            <div class="dropdown-list-image mr-3">
+                                <img class="rounded-circle" src="~/Content/img/alertnoteearlier.png" alt="" />
+                            </div>
+                            <div class="font-weight-bold mr-3">
+                                <div class="text-truncate">@item.Title</div>
+                                <div class="small">@item.Explanation</div>
+                            </div>
+
+                        </div>
+                    }
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

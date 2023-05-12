@@ -1,0 +1,366 @@
+﻿@model ConferenceManagementSystem.Models.ViewModels.RoomMessagesViewModel
+@{
+    ViewBag.Title = "Messages";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .element {
+        display: inline-flex;
+        align-items: center;
+    }
+
+    i.fa-paperclip {
+        margin: 10px;
+        cursor: pointer;
+        font-size: 30px;
+    }
+
+    i:hover {
+        opacity: 0.6;
+    }
+
+    input {
+        display: none;
+    }
+</style>
+<link href="~/Content/chat.css" rel="stylesheet" />
+@*<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">*@
+
+
+<div class="page-title">
+    <div class="row gutters">
+        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+            <h5 class="title">@Model.RoomName</h5>
+        </div>
+        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12 text-right">
+            <div class="daterange-container">
+                <div class="date-range">
+                    <div id="reportrange">
+                        <i class="fa fa-calendar cal pull-left"></i>
+                        <span class="range-text">@DateTime.Now</span>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="content-wrapper">
+    <!-- Row start -->
+    <div class="row gutters">
+
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+
+            <div class="card m-0">
+
+                <!-- Row start -->
+                <div class="row no-gutters">
+                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-3 col-3">
+                        <div class="users-container">
+                            <div class="chat-search-box">
+                                <div class="input-group">
+                                    <input class="form-control" id="name" placeholder="Search">
+                                    <div class="input-group-btn">
+                                        <button type="button" id="search" class="btn btn-info">
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <ul class="users">
+                                @foreach (var item in Model.RoomUsers)
+                                {
+                                    <li class="person" data-chat="person1">
+                                        <div class="user">
+                                            @if (item.User.Gender)
+                                            {
+                                                <img src="~/Content/img/male.png" alt="Retail Admin">
+                                            }
+                                            else
+                                            {
+                                                <img src="~/Content/img/female.png" alt="Retail Admin">
+                                            }
+
+                                            <span class="status online"></span>
+                                        </div>
+                                        <p class="name-time">
+                                            <span class="name">@item.User.Name</span>
+
+                                        </p>
+                                        @if (Convert.ToInt32(Session["userId"].ToString()) == item.UserId || Session["userRole"].ToString() == "Admin" ||
+                                              Session["userRole"].ToString() == "Referee")
+                                        {
+                                            <a href="/Room/Exit?id=@item.Id" class="btn btn-danger btn-sm pull-right" style="float: right;">Exit Room</a>
+
+                                        }
+                                    </li>
+                                }
+
+
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-xl-8 col-lg-8 col-md-8 col-sm-9 col-9">
+                        @*<div class="selected-user">
+                                <span>To: <span class="name">Emily Russell</span></span>
+                            </div>*@
+                        <div class="chat-container">
+                            <ul class="chat-box chatContainerScroll" style="overflow-y: scroll;height:400px">
+                                @foreach (var item in Model.Messages)
+                                {
+                                    string html = "";
+                                    if (item.UserId == Convert.ToInt32(Session["userId"].ToString()))
+                                    {
+                                        html = "chat-right";
+                                    }
+                                    else
+                                    {
+                                        html = "chat-left";
+                                    }
+                                    <li class="@html">
+                                        <div class="chat-avatar">
+
+                                            @if (item.User.Gender)
+                                            {
+                                                <img src="~/Content/img/male.png" alt="Retail Admin">
+                                            }
+                                            else
+                                            {
+                                                <img src="~/Content/img/female.png" alt="Retail Admin">
+                                            }
+                                            <div class="chat-name">@item.User.Name @item.User.Surname</div>
+                                        </div>
+                                        <div class="chat-text">
+                                            @item.Text
+                                            @if (item.Link != null)
+                                            {
+                                                <a href="~/Content/images/@item.Link" target="_blank">@item.Link</a>}
+                                        </div>
+                                        <div class="chat-hour">@item.CreatedDate.Hour:@item.CreatedDate.Minute <span class="fa fa-check-circle"></span></div>
+                                    </li>
+                                }
+
+                                @*<li class="chat-right">
+                                        <div class="chat-hour">08:56 <span class="fa fa-check-circle"></span></div>
+                                        <div class="chat-text">
+                                            Hi, Russell
+                                            <br> I need more information about Developer Plan.
+                                        </div>
+                                        <div class="chat-avatar">
+                                            <img src="https://www.bootdey.com/img/Content/avatar/avatar3.png" alt="Retail Admin">
+                                            <div class="chat-name">Sam</div>
+                                        </div>
+                                    </li>*@
+
+                            </ul>
+                            <div class="form-group mt-3 mb-0">
+                                <textarea class="form-control" rows="3" id="textMsg" placeholder="Type your message here..."></textarea>
+                            </div>
+                            <div class="form-group mt-3 mb-0">
+                                <a href="#" class="btn btn-primary" id="sendMessage" style="float:left">Send</a>
+                                <div class="element" style="float:right">
+                                    <i class="fa fa-paperclip"></i><span class="name">No file selected</span>
+                                    <input type="file" name="" id="fileToUpload">
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <!-- Row end -->
+            </div>
+
+        </div>
+
+    </div>
+    <!-- Row end -->
+
+</div>
+@section scripts {
+    <script type="text/javascript">
+        $(".fa-paperclip").click(function () {
+            $("input[type='file']").trigger('click');
+        });
+
+        $('input[type="file"]').on('change', function () {
+            var val = $(this).val();
+            console.log(val.split("'\'")[2]);
+            $(this).siblings('span').text(val);
+        })
+        $(document).ready(function () {
+
+            $('.chat-container').keypress(function (e) {
+                if (e.which == 13) {
+                    sendMessage();
+                }
+            });
+            $("#sendMessage").click(function () {
+                sendMessage();
+             });
+
+        });
+        $('.chatContainerScroll').scrollTop($('.chatContainerScroll')[0].scrollHeight);
+        function sendMessage() {
+            var message = new Object();
+            var fileUpload = $("#fileToUpload").get(0);
+            var files = fileUpload.files;
+
+
+            var fileData = new FormData();
+            if (files[0] != null) {
+                fileData.append(files[0].name, files[0]);
+            }
+
+            message.RoomId =@Model.RoomId;
+            message.UserId =@Model.UserId;
+            fileData.append("UserId", message.UserId);
+            fileData.append("RoomId", message.RoomId);
+
+
+            if (files[0] != null)
+            {
+                if ($("textarea#textMsg").val()!="")
+                {
+                    message.Text = $("textarea#textMsg").val();
+
+                }
+                else {
+                    message.Text = "A file has been sent";
+                }
+                fileData.append("Text", message.Text);
+            }
+            else
+            {
+                message.Text = $("textarea#textMsg").val();
+                fileData.append("Text", message.Text);
+                if (message.Text == null || message.Text == "") {
+                    alert("Please Enter Message");
+                    return;
+                }
+            }
+
+            $.ajax({
+                url: '/Message/SendMessage',
+                type: 'POST',
+                data: fileData,
+                contentType: "application/json; charset=utf-8",
+                dataType: 'json',
+                contentType: false,
+                processData: false,
+                async: false,
+                success: function (data) {
+                    getMessage(data);
+
+                    $("#fileToUpload").val("");
+                }
+
+            });
+
+        }
+
+        function getMessage(roomId)
+        {
+            $.ajax({
+                url: '/Message/GetMessage',
+                type: 'GET',
+                data: {"roomId": roomId },
+                contentType: "application/json; charset=utf-8",
+                dataType: 'json',
+                success: function (data) {
+                    var temp = "";
+
+
+                    $.each(data, function (index, value) {
+                        var text = "";
+                        var link = "";
+                        var gender = "";
+                        var position = "";
+                        if (data[index].User.Id ==@Model.UserId) {
+
+                            position = "chat-right";
+                        }
+                        else {
+
+                            position = "chat-left";
+                        }
+                        if (data[index].Link != null) {
+                            link = ' </br> <a href="/Content/images/' + data[index].Link + '" target="_blank">' + data[index].Link + '</a>';
+                        }
+                        if (data[index].Text != null) {
+                            text = data[index].Text;
+                        }
+                        if (data[index].User.Gender) {
+                            gender = '<img src="/Content/img/male.png" alt="Retail Admin">';
+                        }
+                        else {
+                            gender = '<img src="/Content/img/female.png" alt="Retail Admin">';
+
+                        }
+
+                        temp += '<li class="' + position + '">' +
+                            '<div class="chat-avatar">' + gender +
+                            '<div class="chat-name">' + data[index].User.Name + data[index].User.Surname + '</div>' +
+                            '</div><div class="chat-text">' + text + '' + link + '</div>' +
+                            '<div class="chat-hour">8:55<span class="fa fa-check-circle"></span></div>' +
+                            '</li>';
+                    });
+                    $(".chatContainerScroll").html(temp);
+                    $("textarea#textMsg").val("");
+                    $('.chatContainerScroll').scrollTop($('.chatContainerScroll')[0].scrollHeight);
+
+                }
+            });
+        }
+        $("#search").click(function () {
+            var roomId =@Model.RoomId;
+            var name = $("#name").val();
+            $.ajax({
+                url: '/Room/SearchUser',
+                type: 'GET',
+                data: { "roomId": roomId, "name": name },
+                contentType: "application/json; charset=utf-8",
+                dataType: 'json',
+                success: function (data) {
+                    console.log(data);
+                    var temp = "";
+                    var genderimg = "";
+                    var exit = "";
+                    $.each(data, function (index, value) {
+                        var gender = data[index].Gender;
+                        var userId = data[index].UserId;
+
+                        if (@Convert.ToInt32(@Session["userId"].ToString()) == userId || "@Session["userRole"].ToString()" == "Admin" ||
+                                              "@Session["userRole"].ToString()" == "Referee") {
+                            exit = '<a href="/Room/Exit?id="+userId+"" class="btn btn-danger btn-sm pull-right" style="float: right;">Exit Room</a>';
+
+                        }
+                        if (gender) {
+                            genderimg = '<img src="/Content/img/male.png" alt="Retail Admin">';
+                        }
+                        else {
+                            genderimg = '<img src="/Content/img/female.png" alt="Retail Admin">';
+                        }
+
+                        temp += '<li class="person" data-chat="person1">' +
+                            '<div class="user">' + genderimg +
+                            '<span class="status online"></span>' +
+                            '</div>' +
+                            '<p class="name-time">' +
+                            '<span class="name">' + data[index].Name + '</span>' +
+
+                            '</p>' +
+                            exit +
+                            '</li>';
+                    });
+                    $(".users").html(temp);
+
+
+                }
+            });
+        });
+    </script>
+}
+
+

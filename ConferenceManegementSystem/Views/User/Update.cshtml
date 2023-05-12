@@ -1,0 +1,43 @@
+﻿@model ConferenceManagementSystem.Models.Entities.User
+@{
+    ViewBag.Title = "Update";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-md-3"></div>
+    <div class="col-md-6 login-form-1">
+
+
+        <form action="/User/Update" method="post">
+
+            <div class="form-group">
+                <input type="text" class="form-control" name="Name" placeholder="Name *" value="@Model.Name" required />
+            </div>
+            <div class="form-group">
+                <input type="text" class="form-control" name="Surname" placeholder="SurName *" value="@Model.Surname" required />
+            </div>
+
+            <div class="form-group">
+                @Html.DropDownList("Gender", new List<SelectListItem>{
+        new SelectListItem{ Text="Male", Value="True"},
+        new SelectListItem{ Text="Female", Value="False"}
+        }, "--- Select ---", new { @class = "form-control" }
+        )
+            </div>
+            <div class="form-group">
+                @Html.DropDownListFor(m => m.RoleId, (SelectList)ViewBag.Roles, "Please Select", new { @class = "dropdown form-control" })
+            </div>
+
+            <input type="hidden" name="Id" value="@Model.Id" />
+            <div class="form-group">
+                <input type="submit" class="btn btn-primary" value="Save" />
+
+
+            </div>
+
+        </form>
+    </div>
+
+</div>
+

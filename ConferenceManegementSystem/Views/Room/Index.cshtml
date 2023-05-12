@@ -1,0 +1,65 @@
+﻿@model IEnumerable<ConferenceManagementSystem.Models.Entities.Room>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Room List</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Room Name</th>
+                        <th>Description</th>
+                        <th>Max User Count</th>
+                        <th>Created Date</th>
+                        <th>Created User</th>
+                        <th>Is Active</th>
+                        <th>Lock/Unlock</th>
+                        <th></th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.RoomName</td>
+                            <td>@item.Description</td>
+                            <td>@item.MaxUserCount</td>
+                            <td>@item.CreatedDate</td>
+                            <td>@item.User.Name @item.User.Surname</td>
+                            <td>@item.IsActive</td>
+                            <td class="text-center">
+                                <a href="/Room/ChangeSituation?roomId=@item.Id" class="btn btn-default btn-sm" title="Lock/Unlock">
+                                    @if (item.IsActive)
+                                    {
+                                        <i class="fa fa-lock text-danger" aria-hidden="true"></i>
+                                    }
+                                    else
+                                    {
+                                        <i class="fa fa-unlock text-success" aria-hidden="true"></i>
+                                    }
+                                </a>
+                            </td>
+                            <td width="9%">
+                                <a href="/Room/Delete?roomId=@item.Id" class="btn btn-danger btn-sm">
+                                    <i class="fa fa-trash text-white" aria-hidden="true"></i>
+                                </a>
+                                <a href="/Room/Update?roomId=@item.Id" class="btn btn-primary btn-sm">
+                                    <i class="fa fa-wrench text-white" aria-hidden="true"></i>
+
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

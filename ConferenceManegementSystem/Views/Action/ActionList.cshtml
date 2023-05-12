@@ -1,0 +1,74 @@
+﻿@model IEnumerable<ConferenceManagementSystem.Models.Entities.RoleAction>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Action List</h6>
+    </div>
+    <div class="card-header py-3">
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal"><i class="fa fa-plus"></i>Add Action</button>
+    </div>
+    <div class="card-body">
+
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Action Name</th>
+                        <th></th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.Action.ActionName</td>
+
+                            <td width="9%">
+
+                                <a href="/Action/DeleteRoleAction?roleActionId=@item.Id" class="btn btn-danger btn-sm">
+                                    <i class="fa fa-trash text-white" aria-hidden="true"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Add Role Action</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="/Action/AddRoleAction" method="post" id="AddAction">
+                    <div class="form-group">
+                        <label for="recipient-name" class="col-form-label">Actions</label>
+                        <input type="hidden" name="roleId" value="@ViewBag.RoleId" />
+                        <select class="form-control" name="actionId">
+                            @foreach (var item in ViewBag.Actions)
+                            {
+                                <option value="@item.Id">@item.ActionName</option>
+                            }
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-primary" form="AddAction">Save</button>
+            </div>
+        </div>
+    </div>
+</div>

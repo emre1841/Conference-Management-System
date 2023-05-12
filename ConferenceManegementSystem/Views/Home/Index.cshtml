@@ -1,0 +1,242 @@
+﻿@model IEnumerable<ConferenceManagementSystem.Models.ViewModels.RoomViewModel>
+@using ConferenceManagementSystem.Models.Entities
+@{
+    ViewBag.Title = "Home Page";
+}
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <input type="hidden" id="error" value="@TempData["Room"]" />
+    <a href="/Room/Create" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+        <i class="fa fa-plus"></i> Add New Room
+    </a>
+    @if (Session["userRole"].ToString() != "Admin")
+
+    {
+<ul class="nav nav-pills nav-fill">
+    <li class="nav-item" style="margin-right:10px;">
+        <a class="nav-link btn btn-primary btn-sm" href="/Home/Index?favorites=false"><i class="fa fa-globe text-white" aria-hidden="true"></i> Active Room</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link btn btn-success btn-sm" href="/Home/Index?favorites=true"><i class="fa fa-thumbs-up text-white" aria-hidden="true"></i> Favorite Room</a>
+    </li>
+    <li class="nav-item" style="margin-left:10px;">
+        <a class="nav-link btn btn-danger btn-sm" href="/Home/Index?isLock=false"><i class="fa fa-lock text-white" aria-hidden="true"></i> Locked Room</a>
+    </li>
+
+</ul>
+    }
+        
+</div>
+<div class="row">
+    @foreach (var item in Model)
+    {
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+
+                            <div class="text-lg font-weight-bold text-warning text-uppercase mb-1">
+
+                                @if (Session["userRole"].ToString() != "Admin")
+                                {
+                                    if (item.Room.IsActive)
+                                    {
+                                        if (item.Room.IsPrivate)
+                                        {
+                                            <a href="#"  data-id="@item.Room.Id" class="privateRoom text-lg font-weight-bold text-warning text-uppercase mb-1"> @item.Room.RoomName</a>
+                                        }
+                                        else
+                                        {
+                                            <a href="/Room/Details?roomId=@item.Room.Id" class="text-lg font-weight-bold text-warning text-uppercase mb-1"> @item.Room.RoomName</a>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <a href="#" class="text-lg font-weight-bold text-warning text-uppercase mb-1 passive"> @item.Room.RoomName</a>
+
+                                    }
+                                }
+                                else
+                                {
+                                    <a href="/Room/Details?roomId=@item.Room.Id" class="text-lg font-weight-bold text-warning text-uppercase mb-1"> @item.Room.RoomName</a>
+                                }
+
+                            </div>
+                            @{ var percent = (item.UserCount * 100) / item.Room.MaxUserCount;}
+                            <div class="row no-gutters align-items-center">
+                                <div class="col-auto">
+                                    <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">@percent%</div>
+                                </div>
+                                <div class="col">
+                                    <div class="progress progress-sm mr-2">
+                                        <div class="progress-bar bg-warning" role="progressbar"
+                                             style="width: @percent%" aria-valuenow="@percent" aria-valuemin="0"
+                                             aria-valuemax="100"></div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                            @if (item.Room.IsPrivate)
+                            {
+                                <label class="text-primary" title="this room is private!!">Private</label>
+                            }
+                        </div>
+
+                        <div class="col-md-2">
+                            @if (Session["userRole"].ToString() == "Admin")
+                            {
+                                if (item.Room.IsActive)
+                                {
+                                    <a href="/Room/ChangeSituation?roomId=@item.Room.Id&pageId=1" class="btn btn-default btn-sm" title="Lock/Unlock">
+                                        <i class="fas fa-bezier-curve text-success fa-2x"></i>
+                                    </a>
+
+
+                                }
+                                else
+                                {
+                                    <a href="/Room/ChangeSituation?roomId=@item.Room.Id&pageId=1" class="btn btn-default btn-sm" title="Lock/Unlock">
+                                        <i class="fa fa-lock text-danger fa-2x" aria-hidden="true"></i>
+                                    </a>
+
+
+                                }
+                            }
+                            else
+                            {
+                                if (item.Room.IsActive)
+                                {
+                                    <i class="fas fa-bezier-curve text-success fa-2x"></i>
+                                    if (item.IsFavorite)
+                                    {
+                                        <a id="favorite" style="margin-left: 6px" href="/Favorite/RemoveFavorite?roomId=@item.Room.Id"><i class="fa fa-thumbs-up" style="font-size:1.5em" aria-hidden="true"></i></a>
+
+                                    }
+                                    else
+                                    {
+                                        <a style="margin-left: 6px" href="/Favorite/AddFavorites?roomId=@item.Room.Id"><i class="fa fa-thumbs-up text-gray-600" style="font-size:1.5em" aria-hidden="true"></i></a>
+                                    }
+
+
+                                }
+                                else
+                                {
+                                    <i class="fa fa-lock text-danger fa-2x" aria-hidden="true"></i>
+
+                                }
+                            }
+
+                        </div>
+                        @if (!item.Room.IsActive)
+                        {
+                            <h9 class="text-danger" style="font-size:0.9rem">Admin approval pending!</h9>
+                        }
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    }
+    @{
+        var room = (RoomUser)TempData["Room"];
+        var roomId = TempData["RoomId"];
+    }
+    @if (room != null)
+    {
+        <div class="modal fade" id="roomModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+
+                    <div class="modal-body">
+                        Do you want to check out from the @room.Room.RoomName room?
+                    </div>
+
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                        <a class="btn btn-primary" href="/Room/Leave?roomId=@roomId">Leave</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    <div class="modal fade" id="passModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <form action="/Room/CheckPassword" method="post">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Enter Room Password</h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <input type="hidden" id="id" name="id" />
+                    <div class="modal-body">
+                        <div class="form-group" id="pass">
+                            <input type="password" class="form-control" name="password" placeholder="Password *" value="" required />
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                        <button class="btn btn-primary" type="submit">Connect</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            var value = $("#error").val();
+            if (value != "") {
+                $("#roomModal").modal("show");
+            }
+
+        });
+        $(".passive").click(function () {
+            alert("This room is locked.");
+        });
+        $('#favoriteSelect').on('change', function () {
+            if (this.value) {
+                window.location.href = "/Home/Index?favorites=true";
+            }
+            else {
+                window.location.href = "/Home/Index";
+
+            }
+        });
+        $('.privateRoom').click(function () {
+            var id = $(this).data("id");
+            $('#id').val(id);
+            $.ajax({
+                url: '/Room/PrivateCheckUserRoom',
+                type: 'GET',
+                data: { 'id': id },
+                contentType: "application/json; charset=utf-8",
+                dataType: 'json',
+                success: function (data) {
+                    console.log(data);
+                    if (!data) {
+                        document.location.href = '/Room/Details?roomId=' + id;
+                    }
+                    else {
+                        $("#passModal").modal("show");
+                    }
+                }
+
+            });
+        });
+        
+    </script>
+}

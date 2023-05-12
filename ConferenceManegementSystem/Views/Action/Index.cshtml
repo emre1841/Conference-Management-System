@@ -1,0 +1,49 @@
+﻿@model IEnumerable<ConferenceManagementSystem.Models.Entities.Action>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Action List</h6>
+    </div>
+    <div class="card-header py-3">
+        <a href="/Action/Create" class="btn btn-primary">Create Action</a>
+    </div>
+    <div class="card-body">
+
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Action Name</th>
+                        <th></th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.ActionName</td>
+                           
+                            <td width="9%">
+                                
+                                <a href="/Action/Delete?actionId=@item.Id" class="btn btn-danger btn-sm">
+                                    <i class="fa fa-trash text-white" aria-hidden="true"></i>
+                                </a>
+                                <a href="/Action/Update?actionId=@item.Id" class="btn btn-primary btn-sm">
+                                    <i class="fa fa-wrench text-white" aria-hidden="true"></i>
+
+                                </a>
+
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,49 @@
+﻿@model IEnumerable<ConferenceManagementSystem.Models.Entities.Notification>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Notification List</h6>
+    </div>
+    <div class="card-header py-3">
+        <a href="/Notification/Create" class="btn btn-primary">Create Notification</a>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Explanation</th>
+
+                        <th></th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.Title</td>
+                            <td>@item.Explanation</td>
+
+                            <td width="9%">
+                                <a href="/Notification/Delete?id=@item.Id" class="btn btn-danger btn-sm">
+                                    <i class="fa fa-trash text-white" aria-hidden="true"></i>
+                                </a>
+                                <a href="/Notification/Update?id=@item.Id" class="btn btn-primary btn-sm">
+                                    <i class="fa fa-wrench text-white" aria-hidden="true"></i>
+
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

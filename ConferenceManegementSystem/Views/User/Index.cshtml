@@ -1,0 +1,65 @@
+﻿@model IEnumerable<ConferenceManagementSystem.Models.Entities.User>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+
+        <h6 class="m-0 font-weight-bold text-primary">User List</h6>
+        
+    </div>
+    <div class="card-header py-3">
+        <a href="/User/Create" class="btn btn-success"><i class="fa fa-plus"></i> Add User</a>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Surname</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Gender</th>
+                        <th></th>
+                    </tr>
+                </thead>
+           <tbody>
+               @foreach (var item in Model)
+               {
+               <tr>
+                   <td>@item.Name</td>
+                   <td>@item.Surname</td>
+                   <td>@item.Email</td>
+                   <td>@item.Role.RoleName</td>
+                   <td>
+                       @if (item.Gender)
+                       {
+                           <b>Male</b>
+                       }
+                       else
+                       {
+
+                           <b>Female</b>
+                       }
+                      
+                   </td>
+                   <td width="9%">
+                       <a href="/User/Delete?userId=@item.Id" class="btn btn-danger btn-sm">
+                           <i class="fa fa-trash text-white" aria-hidden="true"></i>
+                       </a>
+                       <a href="/User/Update?userId=@item.Id" class="btn btn-primary btn-sm">
+                           <i class="fa fa-wrench text-white" aria-hidden="true"></i>
+
+                       </a>
+                   </td>
+               </tr>
+               }
+           </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+

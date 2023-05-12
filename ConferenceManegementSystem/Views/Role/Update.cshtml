@@ -1,0 +1,30 @@
+﻿@model ConferenceManagementSystem.Models.Entities.Role
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-md-3"></div>
+    <div class="col-md-6 login-form-1">
+
+
+        <form action="/Role/Update" method="post">
+            <div class="form-group">
+                <input type="text" class="form-control" name="RoleName" placeholder="Role Name *" value="@Model.RoleName" required />
+            </div>
+            <div class="form-group">
+                <input type="text" class="form-control" name="Description" placeholder="Role Description *" value="@Model.Description" required />
+            </div>
+            <input type="hidden" name="Id" value="@Model.Id" />
+
+            <div class="form-group">
+                <input type="submit" class="btn btn-primary" value="Save" />
+
+            </div>
+
+        </form>
+    </div>
+
+</div>
+
